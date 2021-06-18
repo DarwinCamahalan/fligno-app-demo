@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "food-delivery-app-expo",
-    "slug": "food-delivery-app-expo",
+    "name": "fligno-app-demo",
+    "slug": "fligno-app-demo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

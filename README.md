@@ -1,6 +1,7 @@
 # FoodRabbit App
 
 ## A Demo for Interview in Fligno Software Philippines 
+## [Expo App Published](exp://exp.host/@darpax101/fligno-app-demo)
 
 ---
 

@@ -1,30 +1,28 @@
-import React from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { View, Text, Image, TouchableOpacity } from 'react-native'
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps'
 import MapViewDirections from 'react-native-maps-directions'
-
 import { COLORS, FONTS, icons, SIZES, GOOGLE_API_KEY } from '../constants'
 
 const OrderDelivery = ({ route, navigation }) => {
-  const mapView = React.useRef()
+  // INITIALIZING VARIABLES
+  const mapView = useRef()
+  const [restaurant, setRestaurant] = useState(null)
+  const [streetName, setStreetName] = useState('')
+  const [fromLocation, setFromLocation] = useState(null)
+  const [toLocation, setToLocation] = useState(null)
+  const [region, setRegion] = useState(null)
+  const [duration, setDuration] = useState(0)
+  const [isReady, setIsReady] = useState(false)
+  const [angle, setAngle] = useState(0)
 
-  const [restaurant, setRestaurant] = React.useState(null)
-  const [streetName, setStreetName] = React.useState('')
-  const [fromLocation, setFromLocation] = React.useState(null)
-  const [toLocation, setToLocation] = React.useState(null)
-  const [region, setRegion] = React.useState(null)
-
-  const [duration, setDuration] = React.useState(0)
-  const [isReady, setIsReady] = React.useState(false)
-  const [angle, setAngle] = React.useState(0)
-
-  React.useEffect(() => {
+  // USING USEEFFECT TO LOAD THE LOCATION ONCE THE APP IS LOADED
+  // AND ALSO CALCULATING THE COORDINATES ONCE
+  useEffect(() => {
     let { restaurant, currentLocation } = route.params
-
     let fromLoc = currentLocation.gps
     let toLoc = restaurant.location
     let street = currentLocation.streetName
-
     let mapRegion = {
       latitude: (fromLoc.latitude + toLoc.latitude) / 2,
       longitude: (fromLoc.longitude + toLoc.longitude) / 2,
@@ -32,6 +30,7 @@ const OrderDelivery = ({ route, navigation }) => {
       longitudeDelta: Math.abs(fromLoc.longitude - toLoc.longitude) * 2,
     }
 
+    // SETTING THE DATA TO A VARIABLE CREATED
     setRestaurant(restaurant)
     setStreetName(street)
     setFromLocation(fromLoc)
@@ -39,7 +38,8 @@ const OrderDelivery = ({ route, navigation }) => {
     setRegion(mapRegion)
   }, [])
 
-  function calculateAngle(coordinates) {
+  // CALCULATING THE DEFAULT ANGLE WHEN MAP LOADED
+  const calculateAngle = (coordinates) => {
     let startLat = coordinates[0]['latitude']
     let startLng = coordinates[0]['longitude']
     let endLat = coordinates[1]['latitude']
@@ -50,7 +50,8 @@ const OrderDelivery = ({ route, navigation }) => {
     return (Math.atan2(dy, dx) * 180) / Math.PI
   }
 
-  function zoomIn() {
+  // ZOOM IN FUCNTIONALITY FOR THE GOOGLE MAP
+  const zoomIn = () => {
     let newRegion = {
       latitude: region.latitude,
       longitude: region.longitude,
@@ -62,7 +63,8 @@ const OrderDelivery = ({ route, navigation }) => {
     mapView.current.animateToRegion(newRegion, 200)
   }
 
-  function zoomOut() {
+  // ZOOM OUT FUCNTIONALITY FOR THE GOOGLE MAP
+  const zoomOut = () => {
     let newRegion = {
       latitude: region.latitude,
       longitude: region.longitude,
@@ -74,8 +76,10 @@ const OrderDelivery = ({ route, navigation }) => {
     mapView.current.animateToRegion(newRegion, 200)
   }
 
-  function renderMap() {
+  // RENDERING THE ACTUAL AMP IN THE APP
+  const renderMap = () => {
     const destinationMarker = () => (
+      // MARKER FOR THE DESTINATION IN THE MAP
       <Marker coordinate={toLocation}>
         <View
           style={{
@@ -110,7 +114,8 @@ const OrderDelivery = ({ route, navigation }) => {
       </Marker>
     )
 
-    const carIcon = () => (
+    // MARKER WHERE YOU ARE IN THE MAP
+    const youIcon = () => (
       <Marker
         coordinate={fromLocation}
         anchor={{ x: 0.5, y: 0.5 }}
@@ -173,13 +178,14 @@ const OrderDelivery = ({ route, navigation }) => {
             }}
           />
           {destinationMarker()}
-          {fromLocation ? carIcon() : null}
+          {fromLocation ? youIcon() : null}
         </MapView>
       </View>
     )
   }
 
-  function renderDestinationHeader() {
+  // DISPLAYING DESTINATION
+  const renderDestinationHeader = () => {
     return (
       <View
         style={{
@@ -222,7 +228,8 @@ const OrderDelivery = ({ route, navigation }) => {
     )
   }
 
-  function renderDeliveryInfo() {
+  // DISPLAYING DELIVERY INFORMATION
+  const renderDeliveryInfo = () => {
     return (
       <View
         style={{
@@ -326,7 +333,7 @@ const OrderDelivery = ({ route, navigation }) => {
     )
   }
 
-  function renderButtons() {
+  const renderButtons = () => {
     return (
       <View
         style={{
@@ -372,6 +379,7 @@ const OrderDelivery = ({ route, navigation }) => {
   }
 
   return (
+    // RENDERING DIFFERENT COMPONENTS IN THE APP
     <View style={{ flex: 1 }}>
       {renderMap()}
       {renderDestinationHeader()}

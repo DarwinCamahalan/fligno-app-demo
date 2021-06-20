@@ -9,23 +9,24 @@ import {
   Animated,
 } from 'react-native'
 import { isIphoneX } from 'react-native-iphone-x-helper'
-
 import { icons, COLORS, SIZES, FONTS } from '../constants'
 
 const Restaurant = ({ route, navigation }) => {
+  // INITIALIZING VARIABLES
   const scrollX = new Animated.Value(0)
   const [restaurant, setRestaurant] = useState(null)
   const [currentLocation, setCurrentLocation] = useState(null)
   const [orderItems, setOrderItems] = useState([])
 
+  // GETTINGS CURRENT LOCATION AND ITEM IF THE APP LOADED JUST ONCE
   useEffect(() => {
     let { item, currentLocation } = route.params
-
     setRestaurant(item)
     setCurrentLocation(currentLocation)
   })
 
-  function editOrder(action, menuId, price) {
+  // INCREMENT OR DECREMENT QUANTITY OF THE ORDER
+  const editOrder = (action, menuId, price) => {
     let orderList = orderItems.slice()
     let item = orderList.filter((a) => a.menuId == menuId)
 
@@ -58,7 +59,7 @@ const Restaurant = ({ route, navigation }) => {
     }
   }
 
-  function getOrderQty(menuId) {
+  const getOrderQty = (menuId) => {
     let orderItem = orderItems.filter((a) => a.menuId == menuId)
 
     if (orderItem.length > 0) {
@@ -68,19 +69,20 @@ const Restaurant = ({ route, navigation }) => {
     return 0
   }
 
-  function getBasketItemCount() {
+  // DISPLAYING HOW MANY ITEMS ARE IN BASKET
+  const getBasketItemCount = () => {
     let itemCount = orderItems.reduce((a, b) => a + (b.qty || 0), 0)
-
     return itemCount
   }
 
-  function sumOrder() {
+  // DISPLAYING TOTAL OF THE ITEMS
+  const sumOrder = () => {
     let total = orderItems.reduce((a, b) => a + (b.total || 0), 0)
-
     return total.toFixed(2)
   }
 
-  function renderFoodInfo() {
+  // DISPLAYING INFORMATION ABOUT THE ORDER AND ITEM
+  const renderFoodInfo = () => {
     return (
       <Animated.ScrollView
         horizontal
@@ -188,9 +190,9 @@ const Restaurant = ({ route, navigation }) => {
     )
   }
 
-  function renderDots() {
+  // DISPLAYING DOTS FOR SWITCHING OTHER ITEMS (LIKE A SLIDER)
+  const renderDots = () => {
     const dotPosition = Animated.divide(scrollX, SIZES.width)
-
     return (
       <View style={{ height: 30 }}>
         <View
@@ -239,7 +241,8 @@ const Restaurant = ({ route, navigation }) => {
     )
   }
 
-  function renderOrder() {
+  // DISPLAYING ORDER INFORMATION
+  const renderOrder = () => {
     return (
       <View>
         {renderDots()}
@@ -339,6 +342,7 @@ const Restaurant = ({ route, navigation }) => {
   }
 
   return (
+    // DISPLAYING THE DIFFRENT COMPONENTS INSIDE SAFE AREA VIEW (FOR IOS)
     <SafeAreaView style={styles.container}>
       {renderFoodInfo()}
       {renderOrder()}
@@ -346,6 +350,7 @@ const Restaurant = ({ route, navigation }) => {
   )
 }
 
+// STYLESHEET
 const styles = StyleSheet.create({
   container: {
     flex: 1,

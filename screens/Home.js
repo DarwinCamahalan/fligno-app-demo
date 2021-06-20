@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   SafeAreaView,
   View,
@@ -8,9 +8,9 @@ import {
   Image,
   FlatList,
 } from 'react-native'
-
 import { icons, images, SIZES, COLORS, FONTS } from '../constants'
 
+// DUMMY DATA'S TO BE REPLACE BY API IN THE FUTURE (ITS MESSY IN ONE FILE 🤣)
 const Home = ({ navigation }) => {
   const initialCurrentLocation = {
     streetName: 'Divisoria',
@@ -311,33 +311,31 @@ const Home = ({ navigation }) => {
         },
       ],
     },
-  ]
+  ] // DUMMY DATA'S TO BE REPLACE BY API IN THE FUTURE (ITS MESSY IN ONE FILE 🤣)
 
-  const [categories, setCategories] = React.useState(categoryData)
-  const [selectedCategory, setSelectedCategory] = React.useState(null)
-  const [restaurants, setRestaurants] = React.useState(restaurantData)
-  const [currentLocation, setCurrentLocation] = React.useState(
-    initialCurrentLocation
-  )
+  // INITIALIZE VARIABLES
+  const [categories, setCategories] = useState(categoryData)
+  const [selectedCategory, setSelectedCategory] = useState(null)
+  const [restaurants, setRestaurants] = useState(restaurantData)
+  const [currentLocation, setCurrentLocation] = useState(initialCurrentLocation)
 
-  function onSelectCategory(category) {
-    //filter restaurant
+  // FILTER RESTAURANT BY CATEGORIES
+  const onSelectCategory = (category) => {
     let restaurantList = restaurantData.filter((a) =>
       a.categories.includes(category.id)
     )
-
     setRestaurants(restaurantList)
-
     setSelectedCategory(category)
   }
 
-  function getCategoryNameById(id) {
+  const getCategoryNameById = (id) => {
     let category = categories.filter((a) => a.id == id)
     if (category.length > 0) return category[0].name
     return ''
   }
 
-  function renderMainCategories() {
+  // DISPLAY DIFFERENT CATEGOTIES FOR RESTAURANTS
+  const renderMainCategories = () => {
     const renderItem = ({ item }) => {
       return (
         <TouchableOpacity
@@ -398,7 +396,8 @@ const Home = ({ navigation }) => {
     )
   }
 
-  function renderRestaurantList() {
+  // DISPLAYING DIFFERENT RESTAURANTS
+  const renderRestaurantList = () => {
     const renderItem = ({ item }) => (
       <TouchableOpacity
         style={{ marginBottom: SIZES.padding * 2 }}
@@ -409,7 +408,7 @@ const Home = ({ navigation }) => {
           })
         }
       >
-        {/* Image */}
+        {/* FOOD IMAGE */}
         <View
           style={{
             marginBottom: SIZES.padding,
@@ -443,7 +442,7 @@ const Home = ({ navigation }) => {
           </View>
         </View>
 
-        {/* Restaurant Info */}
+        {/* RESTAURANT NAME */}
         <Text style={{ ...FONTS.body2 }}>{item.name}</Text>
 
         <View
@@ -452,7 +451,7 @@ const Home = ({ navigation }) => {
             flexDirection: 'row',
           }}
         >
-          {/* Rating */}
+          {/* RATING */}
           <Image
             source={icons.star}
             style={{
@@ -464,7 +463,7 @@ const Home = ({ navigation }) => {
           />
           <Text style={{ ...FONTS.body3 }}>{item.rating}</Text>
 
-          {/* Categories */}
+          {/* CATEGORIES IN WHICH BELONGS TO */}
           <View
             style={{
               flexDirection: 'row',
@@ -503,6 +502,7 @@ const Home = ({ navigation }) => {
   }
 
   return (
+    // RENDERING DIFFERENT COMPONENTS IN SAFE AREA VIEW (IOS ONLY)
     <SafeAreaView style={styles.container}>
       {renderMainCategories()}
       {renderRestaurantList()}
@@ -510,6 +510,7 @@ const Home = ({ navigation }) => {
   )
 }
 
+// STYLE SHEET
 const styles = StyleSheet.create({
   container: {
     flex: 1,
